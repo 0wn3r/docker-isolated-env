@@ -71,9 +71,12 @@ RUN apt-get update && \
     vim \
     screen \
     rsync \
-    nload && \
+    nload \
+    python-pip && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+RUN pip install pycryptodome
 
 # Fix openjdk-8-292+ security improvement
 RUN sed -i -e "s@^jdk.tls.disabledAlgorithms=.*\$@jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, \\\@" /etc/java-8-openjdk/security/java.security
@@ -94,6 +97,10 @@ RUN adduser \
 
 COPY ./ubuntu/.bashrc ${USER_HOME}
 COPY ./ubuntu/.bash_custom_settings ${USER_HOME}
+
+RUN mkdir -p ${USER_HOME}/.bin
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo > ${USER_HOME}/.bin/repo
+RUN chmod a+rx ${USER_HOME}/.bin/repo
 
 RUN chown -R ${RUN_USER}:${RUN_USER} ${USER_HOME}
 RUN chmod -R 775 ${USER_HOME}

@@ -14,13 +14,13 @@ build: ## Build Docker image Usage: $ make build
 	$(docker_bin) build -t local/build-env -f ./Dockerfile .;
 
 run: ## Start container. In other case you need to run command manually! Usage: $ make run "local_android_root"
-	$(docker_bin) run -itd --name $(image_name) -v $(local_android_root):/home/ubuntu/repo_android local/build-env
+	$(docker_bin) run -itd --name $(image_name) -v $(local_android_root):/home/ubuntu/repo_android -v ~/.gitconfig:/etc/gitconfig local/build-env
 
 stop: ## Stop and remove container. Usage: $ make stop
-	$(docker_bin) ps -a | awk -F "\t" '{ print $$1,$$7 }' | grep "$(image_name)" | awk '{print $$1 }' | xargs -I {} $(docker_bin) stop {}
+	$(docker_bin) ps -a -q --filter "name=dummy" | awk '{print $$1 }' | xargs -I {} $(docker_bin) stop {}
 
 shell: ## Start shell into dummy container. Usage: $ make shell
 	$(docker_bin) exec -it $(image_name) bash
 
 clean: ## Remove images from local registry. Usage: $ make clean
-	$(docker_bin) ps -a | awk -F "\t" '{ print $$1,$$7 }' | grep "$(image_name)" | awk '{print $$1 }' | xargs -I {} $(docker_bin) rm -f {} ; \
+	$(docker_bin) ps -a -q --filter "name=dummy" | awk '{print $$1 }' | xargs -I {} $(docker_bin) rm -f {} ; \

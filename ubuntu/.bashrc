@@ -120,3 +120,5 @@ fi
 if [ -f ~/.bash_custom_settings ]; then
     . ~/.bash_custom_settings
 fi
+
+export PATH="$PATH:/home/ubuntu/.bin"
