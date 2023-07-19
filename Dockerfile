@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL maintainer="Artem Kostin <artem.kostin@globallogic.com>"
 LABEL description="Android Build System Isolated Environment"
@@ -49,7 +49,8 @@ RUN apt-get update && \
     unzip \
     fontconfig \
     libxml-simple-perl \
-    python \
+    python2 \
+    python-is-python2 \
     bc \
     libncurses-dev \
     gawk \
@@ -63,7 +64,7 @@ RUN apt-get update && \
     bsdmainutils   \
     libncurses5-dev \
     libsdl1.2-dev \
-    libwxgtk3.0-dev \
+    libwxgtk3.0-gtk3-dev \
     pngcrush \
     graphviz \
     mc \
@@ -72,9 +73,12 @@ RUN apt-get update && \
     screen \
     rsync \
     nload \
-    python-pip && \
+    uuid-dev && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+RUN python2 get-pip.py
 
 RUN pip install pycryptodome
 
